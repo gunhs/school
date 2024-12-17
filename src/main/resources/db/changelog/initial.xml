@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1734368538747-134" author="vsharanov (generated)">
+        <createSequence incrementBy="1" sequenceName="class_id_seq" startValue="1"/>
+    </changeSet>
+    <changeSet id="1734368538747-2" author="vsharanov (generated)">
+        <createSequence incrementBy="1" sequenceName="school_id_seq" startValue="1"/>
+    </changeSet>
+    <changeSet id="1734368538747-3" author="vsharanov (generated)">
+        <createSequence incrementBy="1" sequenceName="student_id_seq" startValue="1"/>
+    </changeSet>
+    <changeSet id="1734368538747-4" author="vsharanov (generated)">
+        <createSequence incrementBy="1" sequenceName="teacher_id_seq" startValue="1"/>
+    </changeSet>
+    <changeSet id="1734368538747-5" author="vsharanov (generated)">
+        <createTable tableName="class">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_class"/>
+            </column>
+            <column name="class_name" type="VARCHAR(255)"/>
+            <column name="teacher_id" type="BIGINT"/>
+            <column name="school_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1734368538747-6" author="vsharanov (generated)">
+        <createTable tableName="school">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_school"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1734368538747-7" author="vsharanov (generated)">
+        <createTable tableName="student">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_student"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="score" type="DOUBLE"/>
+            <column name="a_class_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1734368538747-8" author="vsharanov (generated)">
+        <createTable tableName="teacher">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_teacher"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1734368538747-9" author="vsharanov (generated)">
+        <addForeignKeyConstraint baseColumnNames="school_id" baseTableName="class" constraintName="FK_CLASS_ON_SCHOOL"
+                                 referencedColumnNames="id" referencedTableName="school"/>
+    </changeSet>
+    <changeSet id="1734368538747-10" author="vsharanov (generated)">
+        <addForeignKeyConstraint baseColumnNames="teacher_id" baseTableName="class" constraintName="FK_CLASS_ON_TEACHER"
+                                 referencedColumnNames="id" referencedTableName="teacher"/>
+    </changeSet>
+    <changeSet id="1734368538747-11" author="vsharanov (generated)">
+        <addForeignKeyConstraint baseColumnNames="a_class_id" baseTableName="student"
+                                 constraintName="FK_STUDENT_ON_ACLASS" referencedColumnNames="id"
+                                 referencedTableName="class"/>
+    </changeSet>
+
+    <changeSet id="add teachers" author="vsharanov">
+        <sql>
+            INSERT INTO teacher (id, name)
+            VALUES
+            ((SELECT nextval('teacher_id_seq')),'Артюхов Игорь Владимирович'),
+            ((SELECT nextval('teacher_id_seq')),'Красина Людмила Олеговна'),
+            ((SELECT nextval('teacher_id_seq')),'Боженова Юлия Максимовна');
+        </sql>
+    </changeSet>
+
+    <changeSet id="add schools" author="vsharanov">
+        <sql>
+            INSERT INTO school (id, name)
+            VALUES
+            ((SELECT nextval('school_id_seq')),'Первая');
+        </sql>
+    </changeSet>
+
+    <changeSet id="add classes"  author="vsharanov">
+        <sql>
+            INSERT INTO class (id, class_name, teacher_id, school_id)
+            VALUES
+            ((SELECT nextval('class_id_seq')), '11a', 1, 1),
+            ((SELECT nextval('class_id_seq')), '9b', 2, 1),
+            ((SELECT nextval('class_id_seq')), '7a', 3, 1);
+        </sql>
+    </changeSet>
+
+    <changeSet id="add students" author="vsharanov">
+        <sql>
+            INSERT INTO student (id, name, score, a_class_id)
+            VALUES
+            ((SELECT nextval('student_id_seq')), 'Иванов', 3.6, 1),
+            ((SELECT nextval('student_id_seq')), 'Петров', 4.0, 1),
+            ((SELECT nextval('student_id_seq')), 'Сидоров', 3.5, 1),
+            ((SELECT nextval('student_id_seq')), 'Смирнова', 4.5, 2),
+            ((SELECT nextval('student_id_seq')),'Гирина', 4.9, 2),
+            ((SELECT nextval('student_id_seq')),'Савельев', 4.2, 3),
+            ((SELECT nextval('student_id_seq')), 'Парамонов', 3.7, 3);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
