@@ -42,27 +42,25 @@ public class StudentServiceImpl implements StudentService {
     public Map<String, Map<String, Double>> getSchoolInfoStream(String schoolName) {
         School school = schoolRepository.findByName(schoolName)
                 .orElseThrow(() -> new RuntimeException("School with name " + schoolName + " not found"));
-        return school.getClasses().stream().collect(Collectors.toMap(this::getTeacherName, this::getStudents));
+        return school.getClasses()
+                .stream()
+                .collect(Collectors.toMap(this::getTeacherName, this::getStudents));
     }
 
     @Override
     public List<String> getSchoolInfo(Map<String, Map<String, Double>> stringMapMap) {
         Collection<String> teacherNames = stringMapMap.keySet().stream().toList();
         List<String> result = new ArrayList<>();
-        classRepository.findByTeacher_NameInOrderByClassNameAsc(teacherNames).forEach(c->result.add(c.getClassName()));
+        classRepository.findByTeacher_NameInOrderByClassNameAsc(teacherNames).forEach(c -> result.add(c.getClassName()));
         return result;
     }
 
     @Override
     public List<String> getSchoolInfoStream(Map<String, Map<String, Double>> stringMapMap) {
         Collection<String> teacherNames = stringMapMap.keySet().stream().toList();
-        Map<String, String> teacherNameClassName = classRepository.findAll()
+        return classRepository.findByTeacher_NameInOrderByClassNameAsc(teacherNames)
                 .stream()
-                .collect(Collectors.toMap(this::getTeacherName, Class::getClassName));
-        return teacherNameClassName.entrySet().stream()
-                .filter(e -> teacherNames.contains(e.getKey()))
-                .map(Map.Entry::getValue)
-                .sorted()
+                .map(Class::getClassName)
                 .toList();
     }
 }
